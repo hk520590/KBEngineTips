@@ -18,21 +18,21 @@ KBEngine的Python脚本API在IDE里面无法自动完成
 
 在base上
 
-		try:
-		    import KBEngine
-		except ImportError as e:
-    		# 这里这样做就是为了编码方便
-    		# 实际代码运行的时候是不会走到这里的
-    		from KBEngineTips.BaseApp import KBEngine
+        try:
+            import KBEngine
+        except ImportError as e:
+            # 这里这样做就是为了编码方便
+            # 实际代码运行的时候是不会走到这里的
+            from KBEngineTips.BaseApp import KBEngine
 
 在cell上
 
-		try:
-		    import KBEngine
-		except ImportError as e:
-    		# 这里这样做就是为了编码方便
-    		# 实际代码运行的时候是不会走到这里的
-    		from KBEngineTips.CellApp import KBEngine
+        try:
+            import KBEngine
+        except ImportError as e:
+            # 这里这样做就是为了编码方便
+            # 实际代码运行的时候是不会走到这里的
+            from KBEngineTips.CellApp import KBEngine
 
 其他模块上按照上述方法使用
 
