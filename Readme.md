@@ -1,4 +1,4 @@
-##KBEngine在IDE里面的自动完成和提示功能
+## KBEngine在IDE里面的自动完成和提示功能
 
 ### 介绍
 
@@ -43,5 +43,5 @@ KBEngine的Python脚本API在IDE里面无法自动完成
 2. 在程序执行时,import KBEngine会执行成功,所以不会执行下面的from语句\
 
 
-####该方法在Pycharm上测试成功,其他IDE没有测试 
+#### 该方法在Pycharm上测试成功,其他IDE没有测试 
 
