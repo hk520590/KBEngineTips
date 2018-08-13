@@ -594,7 +594,7 @@ def listPathRes(path, extension):
     pass
 
 
-def lookUpBaseByDBID(entityType, dbID, callback, dbInterfaceName):
+def lookUpEntityByDBID(entityType, dbID, callback, dbInterfaceName):
     """
     功能说明：
         查询一个实体是否从数据库检出，如果实体已经从数据库检出那么KBEngine服务系统将从回调中返回Entity实体的entityCall。
@@ -1253,12 +1253,37 @@ class Proxy(Entity):
         """
         功能说明：
             这个函数返回客户端类型。
-        :return: UNKNOWN_CLIENT_COMPONENT_TYPE = 0,
-                CLIENT_TYPE_MOBILE = 1, // 手机类
-                CLIENT_TYPE_PC = 2, // pc， 一般都是exe客户端
-                CLIENT_TYPE_BROWSER = 3, // web应用， html5，flash
-                CLIENT_TYPE_BOTS = 4, // bots
-                CLIENT_TYPE_END = 5 // end
+
+            UNKNOWN_CLIENT_COMPONENT_TYPE	= 0,
+
+            // 移动类，手机，平板电脑
+            // Mobile, Phone, Pad
+            CLIENT_TYPE_MOBILE				= 1,
+
+            // 独立的Windows应用程序
+            // Windows Application program
+            CLIENT_TYPE_WIN					= 2,
+
+            // 独立的Linux应用程序
+            // Linux Application program
+            CLIENT_TYPE_LINUX				= 3,
+
+            // Mac应用程序
+            // Mac Application program
+            CLIENT_TYPE_MAC					= 4,
+
+            // Web, HTML5, Flash
+            CLIENT_TYPE_BROWSER				= 5,
+
+            // bots
+            CLIENT_TYPE_BOTS				= 6,
+
+            // 轻端类
+            CLIENT_TYPE_MINI				= 7,
+
+            // End
+            CLIENT_TYPE_END					= 8
+        :return:
         """
         pass
 
