@@ -270,6 +270,14 @@ class Entity:
         """
         pass
 
+    def isPlayer(self):
+        """
+        功能说明：
+            这个函数返回这个Entity是否是当前客户端所控制的Player。
+        :return:bool， 如果是当前客户端所控制的Player返回True，否则返回False。
+        """
+        return False
+
     def onDestroy(self):
         """
         实体被销毁时调用。
