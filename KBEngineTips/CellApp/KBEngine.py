@@ -322,31 +322,31 @@ def deregisterWriteFileDescriptor(fileDescriptor):
     """
 
 
-def executeRawDatabaseCommand(command, callback, threadID, dbInterfaceName="default"):
+def executeRawDatabaseCommand(command, callback=None, threadID=0, dbInterfaceName="default"):
     """
     功能说明：
         这个脚本函数在数据库上执行原始数据库命令，该命令将直接由相关数据库进行解析。
         请注意使用该函数修改实体数据可能不生效，因为如果实体已经检出，被修改过的实体数据将仍会被实体存档而导致覆盖。
         强烈不推荐这个函数用于读取或修改实体数据。
     :param command:这个数据库命令将会因为不同数据库配置方案而不同。对于方案为MySQL数据库它是一个SQL查询语句。
-    :param callback:可选参数，带有命令执行结果的回调对象（比如说是一个函数）。这个回调带有4个参数：结果集合，影响的行数，自増长值，错误信息。
+    :param callback:可选参数，带有命令执行结果的回调对象（比如说是一个函数）。
+                    这个回调带有4个参数：结果集合，影响的行数，自増长值，错误信息。
                     声明样例：
-                        def sqlcallback(result, rows, insertid, error):
-                            print(result, rows, insertid, error)
-                    如同上面的例子所示:
-                    result参数对应的就是“结果集合”，这个结果集合参数是一个行列表。 每一行是一个包含字段值的字符串列表。
-                        命令执行没有返回结果集合（比如说是DELETE命令）， 或者 命令执行有错误时这个结果集合为None。
+                    def sqlcallback(result, rows, insertid, error):
+                        print(result, rows, insertid, error)
+                    如同上面的例子所示，result参数对应的就是“结果集合”，这个结果集合参数是一个行列表。 每一行是一个包含字段值的字符串列表。
+                    命令执行没有返回结果集合（比如说是DELETE命令）， 或者 命令执行有错误时这个结果集合为None。
                     rows参数则是“影响的行数”，它是一个整数，表示命令执行受影响的行数。这个参数只和不返回结果结合的命令（如DELETE）相关。
-                        如果有结果集合返回或者命令执行有错误时这个参数为None。
+                    如果有结果集合返回或者命令执行有错误时这个参数为None。
                     insertid对应的是“自増长值”，类似于实体的databaseID，当成功的向一张带有自増长类型字段的表中插入数据时，它返回该数据在插入时自増长字段所被赋于的值。
-                        更多的信息可以参阅mysql的mysql_insert_id()方法。另外，此参数仅在数据库类型为mysql时有意义。
+                    更多的信息可以参阅mysql的mysql_insert_id()方法。另外，此参数仅在数据库类型为mysql时有意义。
                     error则对应了“错误信息”，当命令执行有错误时，这个参数是一个描述错误的字符串。命令执行没有发生错误时这个参数为None。
     :param threadID:int32，可选参数，指定一个线程来处理本条命令。
-                           用户可以通过这个参数控制某一类命令的执行先后顺序（dbmgr是多线程处理的），
-                           默认是不指定，如果threadID是实体的ID，那么将加入到该实体的存档队列中由线程逐条写入。
+                    用户可以通过这个参数控制某一类命令的执行先后顺序（dbmgr是多线程处理的），
+                    默认是不指定，
+                    如果threadID是实体的ID，那么将加入到该实体的存档队列中由线程逐条写入。
     :param dbInterfaceName:string，可选参数，指定由某个数据库接口来完成, 默认使用"default"接口。
-                                   数据库接口由kbengine_defaults.xml->dbmgr->databaseInterfaces中定义。
-    :return:
+                            数据库接口由kbengine_defs.xml->dbmgr->databaseInterfaces中定义。
     """
     pass
 
