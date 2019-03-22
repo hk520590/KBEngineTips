@@ -295,7 +295,7 @@ def createEntityAnywhere(entityType, *params, callback):
     pass
 
 
-def createEntityRemotely(entityType, baseMB, params, callback):
+def createEntityRemotely(entityType, baseMB, *params, callback):
     """
     功能说明：
         通过baseMB参数在一个指定的baseapp上创建一个新的Entity实体。
@@ -390,7 +390,7 @@ def createEntityRemotelyFromDBID(entityType, dbID, baseMB, callback, dbInterface
     pass
 
 
-def createEntityLocally(entityType, params):
+def createEntityLocally(entityType, *params):
     """
     功能说明：
         创建一个新的Entity实体。
@@ -436,7 +436,7 @@ def delWatcher(path):
     pass
 
 
-def deleteEntityByDBID(entityType, dbID, callback, dbInterfaceName):
+def deleteEntityByDBID(entityType, dbID, callback, dbInterfaceName="default"):
     """
     功能说明：
         从数据库删除指定的实体（包括属性所产生的子表数据），
@@ -761,6 +761,31 @@ def time():
                 频率由配置文件kbengine.xml或者kbengine_defs.xml->gameUpdateHertz决定。
     """
     pass
+
+
+def urlopen(url, callback=None, postData="", headers=None):
+    """
+    功能说明：
+    这个脚本函数在提供对外HTTP/HTTPS异步请求。
+    参数： url 有效的HTTP/HTTPS网址，字符串类型。
+    callback 可选参数，带有请求执行结果的回调对象（比如说是一个函数）。这个回调带有5个参数：HTTP请求返回码（如：200)，返回的内容，返回的HTTP协议头，是否成功，请求的网址。
+    声明样例：
+        def onHttpCallback(httpcode, data, headers, success, url):
+                print(httpcode, data, headers, success, url)
+        如同上面的例子所示:
+        httpcode:参数对应的就是“HTTP请求返回码”，这个结果集合参数是一个整形值。
+        data:参数则是“返回的内容”，它是一个字符串。
+        headers:参数是“服务器返回的HTTP协议头”，如：{"Content-Type": "application/x-www-form-urlencoded"}，它是一个字典。
+        success:则对应了“执行是否成功”，当请求执行有错误时，为False，可以通过httpcode进一步判断错误信息。
+        url:是“请求所用的网址。
+    postData 可选参数，默认是GET方式请求服务器，如果需要POST方式请提供需要POST的内容，引擎将自动使用POST方式请求服务器，它是一个bytes。
+    headers 可选参数，请求时使用的HTTP头，如：{"Content-Type": "application/x-www-form-urlencoded"}，它是一个字典。
+    :param url:
+    :param callback:
+    :param postData:
+    :param headers:
+    :return:
+    """
 
 
 # ----------------回调函数--------------------------
