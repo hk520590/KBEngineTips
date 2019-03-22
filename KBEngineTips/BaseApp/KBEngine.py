@@ -1,4 +1,19 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# File Created: 2019-03-22 16:50:14
+# Author: Jacky (jackylvm@foxmail.com>)
+# -----
+# Last Modified: 2019-03-22 16:50:14
+# Modified By: Jacky (jackylvm@foxmail.com>)
+# -----
+# Copyright 2018 上海火刀石网络科技有限公司
+# -----
+# HISTORY:
+# Date      			By			Comments
+# --------------------	---------	-------------------
+#
+# -----------------------------------------------------
+# Baseapp进程主要负责与客户端通讯、与空间或位置无关类游戏逻辑(公会管理器、聊天系统、游戏大厅、排行榜等等)、存档与备份等等。
 
 # ----------------服务器定义的常量--------------------------------------------
 SERVER_SUCCESS = 0  # 成功。
@@ -51,15 +66,15 @@ class Enities(dict):
         dict.__init__(self)
 
 
-class GlobalDataClient(map):
+class GlobalDataClient(dict):
     """"""
 
     def __init__(self):
         """"""
-        map.__init__(self)
+        dict.__init__(self)
 
 
-class EntityCall():
+class EntityCall:
     """"""
 
     def __init__(self):
@@ -88,6 +103,14 @@ class ClientEntityCall(EntityCall):
     def __init__(self):
         """"""
         EntityCall.__init__(self)
+
+
+class CELLDATADICT(dict):
+    """"""
+
+    def __init__(self):
+        """"""
+        dict.__init__(self)
 
 
 # --------------KBEngine模块的成员属性--------------------------------
@@ -176,14 +199,13 @@ def addWatcher(path, datatype, getFunction):
         功能说明：
             与调试监视系统交互，允许用户向监视系统注册一个监视变量。
             例：
-                >>> def countPlayers( ):
-                >>>     i = 0
-                >>>     for e in KBEngine.entities.values():
-                >>>     	if e.__class__.__name__ == "Avatar":
-                >>>     		i += 1
-                >>>     return i
-                >>>
-                >>> KBEngine.addWatcher( "players", "UINT32", countPlayers )
+             def countPlayers( ):
+                 i = 0
+                 for e in KBEngine.entities.values():
+                    if e.__class__.__name__ == "Avatar":
+                        i += 1
+                 return i
+             KBEngine.addWatcher( "players", "UINT32", countPlayers )
         :param path:创建监视的路径。
         :param datatype:监视变量的值类型。参考: 基本类型
         :param getFunction:这个函数当观察者检索该变量时调用。这个函数不带参数返回一个代表监视变量的值。
@@ -207,24 +229,24 @@ def MemoryStream():
         MemoryStream对象存储的是二进制信息，提供这个类型是为了让用户能够方便的序列化与反序列化Python基本类型同时能与KBEngine底层序列化规则相同。
         例如：你可以使用这个对象构造一个KBEngine能解析的网络数据包。
         用法：
-            >>> s = KBEngine.MemoryStream()
-            >>> s
-            >>> b''
-            >>> s.append("UINT32", 1)
-            >>> s.pop("UINT32")
-            >>> 1
+            # >>> s = KBEngine.MemoryStream()
+            # >>> s
+            # >>> b''
+            # >>> s.append("UINT32", 1)
+            # >>> s.pop("UINT32")
+            # >>> 1
         目前MemoryStream能够支持的类型仅为基本数据类型。参考: 基本类型
     """
     pass
 
 
-def charge(ordersID, dbID, byteDatas, pycallback):
+def charge(ordersID, dbID, byteData, pycallback):
     """
     功能说明：
         计费接口。
     :param ordersID:string，订单ID。
     :param dbID:uint64，实体的databaseID。
-    :param byteDatas:bytes，附带数据，由开发者自己解析和定义。
+    :param byteData:bytes，附带数据，由开发者自己解析和定义。
     :param pycallback:计费回调。
                         计费回调原型:
                         (当在interfaces中调用KBEngine.chargeResponse后，如果某个订单设置过回调则该回调被调用)
@@ -301,7 +323,7 @@ def createEntityRemotely(entityType, baseMB, params, callback):
     pass
 
 
-def createEntityFromDBID(entityType, dbID, callback, dbInterfaceName):
+def createEntityFromDBID(entityType, dbID, callback, dbInterfaceName="default"):
     """
     功能说明：
         从数据库里加载数据创建一个Entity实体。这个新的Entity实体会在调用这个函数的Baseapp上创建。如果该实体已经从数据库检出，那么将返回这个存在的Entity实体的引用。
@@ -322,7 +344,7 @@ def createEntityFromDBID(entityType, dbID, callback, dbInterfaceName):
     pass
 
 
-def createEntityAnywhereFromDBID(entityType, dbID, callback, dbInterfaceName):
+def createEntityAnywhereFromDBID(entityType, dbID, callback, dbInterfaceName="default"):
     """
     功能说明：
         从数据库里加载数据并通过baseMB参数在一个指定的baseapp上创建一个Entity实体。
@@ -345,7 +367,7 @@ def createEntityAnywhereFromDBID(entityType, dbID, callback, dbInterfaceName):
     pass
 
 
-def createEntityRemotelyFromDBID(entityType, dbID, baseMB, callback, dbInterfaceName):
+def createEntityRemotelyFromDBID(entityType, dbID, baseMB, callback, dbInterfaceName="default"):
     """
     功能说明：
         从数据库里加载数据并通过baseMB参数在一个指定的baseapp上创建一个Entity实体。
@@ -456,7 +478,7 @@ def deregisterWriteFileDescriptor(fileDescriptor):
     pass
 
 
-def executeRawDatabaseCommand(command, callback, threadID, dbInterfaceName):
+def executeRawDatabaseCommand(command, callback, threadID, dbInterfaceName="default"):
     """
     功能说明：
         这个脚本函数在数据库上执行原始数据库命令，该命令将直接由相关数据库进行解析。
@@ -515,10 +537,10 @@ def getWatcher(path):
     功能说明：
         从KBEngine调试系统中获取一个监视变量的值。
         例子：在baseapp1的Python命令行输入:
-            >>>KBEngine.getWatcher("/root/stats/runningTime")
-            12673648533
-            >>>KBEngine.getWatcher("/root/scripts/players")
-            32133
+            # >>>KBEngine.getWatcher("/root/stats/runningTime")
+            # 12673648533
+            # >>>KBEngine.getWatcher("/root/scripts/players")
+            # 32133
     :param path:string，该变量的绝对路径包括变量名(可以在GUIConsole的watcher页查看)。
     :return:该变量的值。
     """
@@ -530,8 +552,8 @@ def getWatcherDir(path):
     功能说明：
         从KBEngine调试系统中获取一个监视目录下的元素列表(目录、变量名)。
         例子：在baseapp1的Python命令行输入:
-            >>>KBEngine.getWatcher("/root")
-            ('stats', 'objectPools', 'network', 'syspaths', 'ThreadPool', 'cprofiles', 'scripts', 'numProxices', 'componentID', 'componentType', 'uid', 'numClients', 'globalOrder', 'username', 'load', 'gametime', 'entitiesSize', 'groupOrder')
+            # >>>KBEngine.getWatcher("/root")
+            # ('stats', 'objectPools', 'network', 'syspaths', 'ThreadPool', 'cprofiles', 'scripts', 'numProxices', 'componentID', 'componentType', 'uid', 'numClients', 'globalOrder', 'username', 'load', 'gametime', 'entitiesSize', 'groupOrder')
     :param path:string，该变量的绝对路径(可以在GUIConsole的watcher页查看)。
     :return:监视目录下的元素列表(目录、变量名)。
     """
@@ -553,8 +575,8 @@ def hasRes(res):
         使用这个接口可以判断一个相对路径的资源是否存在。
         注意：资源必须在KBE_RES_PATH之下才可以访问到。
         例子:
-            >>>KBEngine.hasRes("scripts/entities.xml")
-            True
+            # >>>KBEngine.hasRes("scripts/entities.xml")
+            # True
     :param res:string，资源的相对路径。
     :return:BOOL, 存在返回True，否则返回False。
     """
@@ -576,17 +598,17 @@ def listPathRes(path, extension):
         获得一个资源目录下的资源列表。
         注意：资源必须在KBE_RES_PATH之下才可以访问到。
         例子:
-            >>>KBEngine.listPathRes("scripts/cell/interfaces")
-            ('/home/kbe/kbengine/demo/res/scripts/cell/interfaces/AI.py', '/home/kbe/kbengine/demo/res/scripts/cell/interfaces/新建文本文档.txt')
-
-            >>>KBEngine.listPathRes("scripts/cell/interfaces", "txt")
-            ('/home/kbe/kbengine/demo/res/scripts/cell/interfaces/新建文本文档.txt')
-
-            >>>KBEngine.listPathRes("scripts/cell/interfaces", "txt|py")
-            ('/home/kbe/kbengine/demo/res/scripts/cell/interfaces/AI.py', '/home/kbe/kbengine/demo/res/scripts/cell/interfaces/新建文本文档.txt')
-
-            >>>KBEngine.listPathRes("scripts/cell/interfaces", ("txt", "py"))
-            ('/home/kbe/kbengine/demo/res/scripts/cell/interfaces/AI.py', '/home/kbe/kbengine/demo/res/scripts/cell/interfaces/新建文本文档.txt')
+            # >>>KBEngine.listPathRes("scripts/cell/interfaces")
+            # ('/home/kbe/kbengine/demo/res/scripts/cell/interfaces/AI.py', '/home/kbe/kbengine/demo/res/scripts/cell/interfaces/新建文本文档.txt')
+            #
+            # >>>KBEngine.listPathRes("scripts/cell/interfaces", "txt")
+            # ('/home/kbe/kbengine/demo/res/scripts/cell/interfaces/新建文本文档.txt')
+            #
+            # >>>KBEngine.listPathRes("scripts/cell/interfaces", "txt|py")
+            # ('/home/kbe/kbengine/demo/res/scripts/cell/interfaces/AI.py', '/home/kbe/kbengine/demo/res/scripts/cell/interfaces/新建文本文档.txt')
+            #
+            # >>>KBEngine.listPathRes("scripts/cell/interfaces", ("txt", "py"))
+            # ('/home/kbe/kbengine/demo/res/scripts/cell/interfaces/AI.py', '/home/kbe/kbengine/demo/res/scripts/cell/interfaces/新建文本文档.txt')
     :param path:string，资源的相对路径。
     :param extension:string，可选参数，扩展名。
     :return:Tuple, 资源列表。
@@ -594,7 +616,7 @@ def listPathRes(path, extension):
     pass
 
 
-def lookUpEntityByDBID(entityType, dbID, callback, dbInterfaceName):
+def lookUpEntityByDBID(entityType, dbID, callback, dbInterfaceName="default"):
     """
     功能说明：
         查询一个实体是否从数据库检出，如果实体已经从数据库检出那么KBEngine服务系统将从回调中返回Entity实体的entityCall。
@@ -615,8 +637,8 @@ def matchPath(res):
         使用相对路径的资源获得资源的绝对路径。
         注意：资源必须在KBE_RES_PATH之下才可以访问到。
         例子:
-            >>>KBEngine.matchPath("scripts/entities.xml")
-            '/home/kbe/kbengine/demo/res/scripts/entities.xml'
+            # >>>KBEngine.matchPath("scripts/entities.xml")
+            # '/home/kbe/kbengine/demo/res/scripts/entities.xml'
     :param res:string，资源的相对路径(包括资源名称)。
     :return:string, 资源的绝对路径。
     """
@@ -714,6 +736,20 @@ def scriptLogType(logType):
     :return:
     """
     pass
+
+
+def setAppFlags(flags):
+    """
+    功能说明：
+        设置当前引擎APP的标记。
+        KBEngine.APP_FLAGS_NONE // 默认的(未设置标记)
+        KBEngine.APP_FLAGS_NOT_PARTCIPATING_LOAD_BALANCING //不参与负载均衡
+
+        例如：
+            KBEngine.setAppFlags(KBEngine.APP_FLAGS_NOT_PARTCIPATING_LOAD_BALANCING | KBEngine.APP_FLAGS_*)
+    :param flags:
+    :return:
+    """
 
 
 def time():
@@ -875,26 +911,42 @@ def onAutoLoadEntityCreate(entityType, dbID):
 
 # ----------------------------Baseapp的两个类-------------------------------------
 class Entity:
-    # -------------------------KBEngine.Entity类的成员属性-------------------------------
-    __cell = CellEntityCall()
+    """
+    Entity类代表一个驻留在Baseapp上的实体。
+    Entity 实体可以通过KBEngine.createEntity函数(以及以createEntity为前缀的函数)创建。
+    一个Entity实体也可以通过Cellapp的函数KBEngine.createEntityOnBaseApp远程创建。
+    一个Entity实体可以在一个活动的cells里面链接到一个实体，还可以被用来在一个合适的cell上创建一个关联的实体。
+    这个类允许你创建和销毁在cell上的实体或者在base实体上注册一个定时器也或者访问此对象的联系信息，
+    还可以访问一个CellEntityCall，
+    通过它这个base实体可以与它的cell实体通信（这个被关联的cell实体可以移动到不同cell上，
+    作为该cell实体移动的结果KBEngine会进行负载均衡）。
+    """
+
+    def __init__(self):
+        """"""
 
     @property
     def cell(self):
         """
-            说明：
-                cell是用于联系cell实体的ENTITYCALL。这个属性是只读的，且如果这个base实体没有关联的cell时属性是None。
-            类型： 只读 ENTITYCALL
+        说明：
+            cell是用于联系cell实体的ENTITYCALL。这个属性是只读的，且如果这个base实体没有关联的cell时属性是None。
+            类型： 只读 CellEntityCall
         """
+        self.__cell = CellEntityCall()
         return self.__cell
 
-    # 说明：
-    #     cellData是一个字典属性。每当base实体没有创建它的cell实体时，cell实体的属性会保存在这里。
-    #     如果cell实体被创建，这些用到的值和cellData属性将被删除。
-    #     除了cell实体在实体定义文件里指定的属性外，它还包含position, direction and spaceID。
-    # 类型： CELLDATADICT
-    cellData = {}
-
-    __className = ""
+    @property
+    def cellData(self):
+        """
+        说明：
+            cellData是一个字典属性。每当base实体没有创建它的cell实体时，cell实体的属性会保存在这里。
+            如果cell实体被创建，这些用到的值和cellData属性将被删除。
+            除了cell实体在实体定义文件里指定的属性外，它还包含position, direction and spaceID。
+            类型： CELLDATADICT
+        :return:
+        """
+        self.__cellData = CELLDATADICT()
+        return self.__cellData
 
     @property
     def className(self):
@@ -903,20 +955,17 @@ class Entity:
           实体的类名。
           类型： 只读，string
         """
-        return self.__className
-
-    __client = ClientEntityCall()
+        return "self"
 
     @property
     def client(self):
         """
         说明：
             client是用于联系客户端的EntityCall。这个属性是只读的，且如果这个base实体没有关联的客户端时属性是None。
-        类型： 只读 ENTITYCALL
+        类型： 只读 ClientEntityCall
         """
+        self.__client = ClientEntityCall()
         return self.__client
-
-    __databaseID = 0  # python的原生数据类型中似乎没有int64的类型，如果真的需要int64，需要第三方库
 
     @property
     def databaseID(self):
@@ -925,9 +974,8 @@ class Entity:
             databaseID是实体的永久ID(数据库id)。这个id是uint64类型且大于0，如果是0则表示该实体不是永久的。
         类型： 只读 int64
         """
+        self.__databaseID = 0
         return self.__databaseID
-
-    __databaseInterfaceName = ""
 
     @property
     def databaseInterfaceName(self):
@@ -937,6 +985,7 @@ class Entity:
             实体必须持久化过（databaseID>0）该属性才可用，否则返回空字符串。
         类型： 只读 string
         """
+        self.__databaseInterfaceName = ""
         return self.__databaseInterfaceName
 
     @property
@@ -945,9 +994,8 @@ class Entity:
         id是实体的对象id。这个id是一个整型，在base，cell和client相关联的实体之间是相同的。这个属性是只读的。
         类型： 只读的，int32
         """
+        self.__id = 0
         return self.__id
-
-    __isDestroyed = False
 
     @property
     def isDestroyed(self):
@@ -956,9 +1004,8 @@ class Entity:
           如果该Base实体已经被销毁了，这个属性为True。
           类型： bool
         """
+        self.__isDestroyed = False
         return self.__isDestroyed
-
-    __shouldAutoArchive = False
 
     @property
     def shouldAutoArchive(self):
@@ -970,9 +1017,8 @@ class Entity:
             如果设为KBEngine.NEXT_ONLY，自动存档将在下一个预定的时间可用，在下一次存档后，这个属性将置为False。
         类型： True, False or KBEngine.NEXT_ONLY
         """
+        self.__shouldAutoArchive = NEXT_ONLY
         return self.__shouldAutoArchive
-
-    __shouldAutoBackup = False
 
     @property
     def shouldAutoBackup(self):
@@ -984,6 +1030,7 @@ class Entity:
             如果设为KBEngine.NEXT_ONLY，自动备份将在下一个预定的时间可用，在下一次备份后，这个属性将置为False。
         类型： True, False or KBEngine.NEXT_ONLY
         """
+        self.__shouldAutoBackup = NEXT_ONLY
         return self.__shouldAutoBackup
 
     # ------------------KBEngine.Entity类的成员函数-----------------------------------------
@@ -1097,7 +1144,7 @@ class Entity:
         """
         pass
 
-    def writeToDB(self, callback, shouldAutoLoad, dbInterfaceName):
+    def writeToDB(self, callback, shouldAutoLoad, dbInterfaceName="default"):
         """
         功能说明：
             该函数保存这个实体的存档属性到数据库，使得以后需要的时候可以重新从数据库加载。
@@ -1169,6 +1216,13 @@ class Entity:
         """
         pass
 
+    def onTeleportFailure(self):
+        """
+        如果这个函数在脚本中有实现，当用户调用Entity.teleport失败时该回调被调用。
+        :return:
+        """
+        pass
+
     def onTeleportSuccess(self, nearbyEntity):
         """
         功能说明:
@@ -1193,36 +1247,53 @@ class Proxy(Entity):
     Proxy是Entity的一个特殊类型，它继承自Entity，它有一个关联的客户端。
     本身来说，它就是一个代理客户端的实体，操控所有服务端向客户端的更新。不能在脚本直接创建Proxy类对象。
     """
+
+    def __init__(self):
+        """"""
+        Entity.__init__(self)
+
     # ------------------------------KBEngine.Proxy的成员属性--------------------------------------------
-    # 说明：
-    #    如果proxy是帐号则可以访问__ACCOUNT_NAME__得到帐号名。
-    __ACCOUNT_NAME__ = ""
+    @property
+    def __ACCOUNT_NAME__(self):
+        """
+        说明：
+            如果proxy是帐号则可以访问__ACCOUNT_NAME__得到帐号名。
+        :return
+        """
+        return ""
 
-    # 说明：
-    #    如果proxy是帐号则可以访问__ACCOUNT_PASSWORD__得到帐号MD5密码。
-    __ACCOUNT_PASSWORD__ = ""
+    @property
+    def __ACCOUNT_PASSWORD__(self):
+        """
+        说明：
+            如果proxy是帐号则可以访问__ACCOUNT_PASSWORD__得到帐号MD5密码。
+        :return
+        """
+        return ""
 
-    clientAddr = tuple("127.0,0.1", 1234)
-
-    clientEnabled = False
+    @property
+    def clientAddr(self):
+        """
+        说明：
+            这是一个tuple对象，包含了客户端的ip与端口。
+        :return
+        """
+        self.__clientAddr = ("127.0,0.1", 1234)
+        return self.__clientAddr
 
     @property
     def clientEnabled(self):
         """
         实体是否已经可用。在实体可用之前脚本不能与客户端进行通讯。
         """
-        return self.__clientEnabled
-
-    __hasClient = False
+        return False
 
     @property
     def hasClient(self):
         """
         Proxy是否绑定了一个客户端连接。
         """
-        return self.__hasClient
-
-    __roundTripTime = 0.0
+        return False
 
     @property
     def roundTripTime(self):
@@ -1230,9 +1301,7 @@ class Proxy(Entity):
         在一段时间内服务器与这个Proxy绑定的客户端通讯平均往返时间。这个属性只在Linux下生效。
         :return:
         """
-        return self.__roundTripTime
-
-    __timeSinceHeardFromClient = 0.0
+        return 0.0
 
     @property
     def timeSinceHeardFromClient(self):
@@ -1240,7 +1309,7 @@ class Proxy(Entity):
         最后一次收到客户端数据包时到目前为止所过去的时间（秒）。
         :return:
         """
-        return self.__timeSinceHeardFromClient
+        return 0
 
     # --------------Proxy的方法----------------------
     def disconnect(self):
@@ -1352,7 +1421,7 @@ class Proxy(Entity):
         """
         pass
 
-    def onEntitiesEnabled(self):
+    def onClientEnabled(self):
         """
         如果在脚本中实现了此回调，当实体可用时（ 各种初始化完毕并且可以与客户端通讯 ）该回调被调用。 这个方法没有参数。
         注意：giveClientTo将控制权赋给了该实体时也会导致该回调被调用。

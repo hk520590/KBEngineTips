@@ -1,5 +1,25 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-class bots(dict):
+# File Created: 2019-03-22 19:11:22
+# Author: Jacky (jackylvm@foxmail.com>)
+# -----
+# Last Modified: 2019-03-22 19:11:22
+# Modified By: Jacky (jackylvm@foxmail.com>)
+# -----
+# Copyright 2018 上海火刀石网络科技有限公司
+# -----
+# HISTORY:
+# Date      			By			Comments
+# --------------------	---------	-------------------
+#
+# -----------------------------------------------------
+# Bots是一种对服务端进行模拟测试的轻量级客户端程序，
+# Bots没有渲染等部分，通过大量的模拟客户端与服务端进行逻辑交互能够测试出服务端隐含的BUG与压力，
+# 从而使得开发人员能够有效的针对性的对服务端进行优化。
+# 注意：Bots进程需要在scripts/bots下实现相关客户端代码，由Python脚本来扩展实现。
+
+
+class PyBots(dict):
     """"""
 
     def __init__(self):
@@ -12,8 +32,8 @@ class bots(dict):
 # 这是一个只读变量,最好不要给他赋值
 component = "bot"
 
-#
-bots = bots()
+# bots是一个字典对象，包含当前进程上所有的客户端对象。
+bots = PyBots()
 
 
 # ----------------KBEngine模块的成员函数--------------------------------------
@@ -152,12 +172,12 @@ def onFinish():
     pass
 
 
-class MAILBOX(object):
+class ENTITYCALL:
     """"""
 
     def __init__(self):
         """"""
-        object.__init__(self)
+        pass
 
 
 class CELLDATADICT(dict):
@@ -176,7 +196,7 @@ class Entities(dict):
         dict.__init__(self)
 
 
-class PyClientApp(object):
+class PyClientApp:
     """
     类Entity的实例代表着在client上的游戏对象。
     一个Entity可以通过MAILBOX访问在base和cell应用程序上的等价的实体。这需要一组远程调用的函数（在实体的.def文件里指定）。
@@ -184,8 +204,6 @@ class PyClientApp(object):
 
     def __init__(self):
         """"""
-        object.__init__(self)
-        self.__entities = Entities()
 
     # -------------KBEngine.Entity类的成员属性-------------------------------------------
     @property
@@ -198,6 +216,7 @@ class PyClientApp(object):
         """
         entities是一个字典对象，包含当前进程上所有的实体。
         """
+        self.__entities = Entities()
         return self.__entities
 
     def getSpaceData(self, key):
@@ -258,9 +277,8 @@ class Entity:
 
     def __init__(self):
         """"""
-        self.__base = MAILBOX()
-        self.__cell = MAILBOX()
-        self.__cellData = CELLDATADICT()
+        self.__base = ENTITYCALL()
+        self.__cell = ENTITYCALL()
         self.__clientapp = PyClientApp()
 
     # -------------KBEngine.Entity类的成员属性-------------------------------------------
@@ -287,18 +305,9 @@ class Entity:
         return self.__cell
 
     @property
-    def cellData(self):
-        """
-        cellData是一个字典属性。每当base实体没有创建它的cell实体时，cell实体的属性会保存在这里。
-        如果cell实体被创建，这些用到的值和cellData属性将被删除。
-        除了cell实体在实体定义文件里指定的属性外，它还包含position, direction and spaceID。
-        """
-        return self.__cellData
-
-    @property
     def className(self):
         """"""
-        return self.__class__.__name__
+        return ""
 
     @property
     def clientapp(self):
@@ -312,7 +321,7 @@ class Entity:
         :return:Tuple, 其中包含(roll, pitch, yaw)，以弧度表示。
         """
         # 这样返回只是要告诉你他返回的是一个元组,具体内容要看具体实现
-        return (0, 0, 0)
+        return 0, 0, 0
 
     @property
     def id(self):

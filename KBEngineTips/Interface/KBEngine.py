@@ -1,4 +1,21 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# File Created: 2019-03-22 19:20:07
+# Author: Jacky (jackylvm@foxmail.com>)
+# -----
+# Last Modified: 2019-03-22 19:20:07
+# Modified By: Jacky (jackylvm@foxmail.com>)
+# -----
+# Copyright 2018 上海火刀石网络科技有限公司
+# -----
+# HISTORY:
+# Date      			By			Comments
+# --------------------	---------	-------------------
+#
+# -----------------------------------------------------
+# Interfaces进程主要处理KBEngine服务端与第三方平台的接入接出工作。
+# 注意：该进程脚本实现在scripts/interface目录中。
+
 
 # ----------------KBEngine模块的成员函数--------------------------------------
 def addTimer(initialOffset, repeatOffset=0, callbackObj=None):

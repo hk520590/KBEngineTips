@@ -1,6 +1,24 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# File Created: 2019-03-22 19:09:33
+# Author: Jacky (jackylvm@foxmail.com>)
+# -----
+# Last Modified: 2019-03-22 19:09:33
+# Modified By: Jacky (jackylvm@foxmail.com>)
+# -----
+# Copyright 2018 上海火刀石网络科技有限公司
+# -----
+# HISTORY:
+# Date      			By			Comments
+# --------------------	---------	-------------------
+#
+# -----------------------------------------------------
+# Dbmgr进程主要负责处理实体数据的存储与实体数据的加载查询等等。
+# 注意：该进程脚本实现在scripts/db目录中。
 
 # ----------------KBEngine模块的成员函数--------------------------------------
+
+
 def addTimer(initialOffset, repeatOffset=0, callbackObj=None):
     """
     功能说明：
@@ -58,6 +76,16 @@ def onDBMgrShutDown():
     :return:
     """
     pass
+
+
+def onReadyForShutDown():
+    """
+    功能说明：
+        如果这个函数在脚本中有实现，当进程准备退出时，该回调函数被调用。
+        可以通过该回调控制进程退出的时机。
+        注意：该回调接口必须实现在入口模块(kbengine_defaults.xml->entryScriptFile)中。
+    :return:bool，如果返回True，则允许进入进程退出流程，返回其它值则进程会过一段时间后再次询问。
+    """
 
 
 def onSelectAccountDBInterface(accountName):

@@ -1,4 +1,20 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# File Created: 2019-03-22 19:08:07
+# Author: Jacky (jackylvm@foxmail.com>)
+# -----
+# Last Modified: 2019-03-22 19:08:07
+# Modified By: Jacky (jackylvm@foxmail.com>)
+# -----
+# Copyright 2018 上海火刀石网络科技有限公司
+# -----
+# HISTORY:
+# Date      			By			Comments
+# --------------------	---------	-------------------
+#
+# -----------------------------------------------------
+# Loginapp进程主要负责处理实体的注册与登陆请求。
+# 注意：该进程脚本实现在scripts/login目录中。
 
 # ----------------服务器定义的常量--------------------------------------------
 SERVER_SUCCESS = 0  # 成功。

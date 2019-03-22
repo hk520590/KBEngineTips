@@ -1,4 +1,20 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# File Created: 2019-03-22 18:35:59
+# Author: Jacky (jackylvm@foxmail.com>)
+# -----
+# Last Modified: 2019-03-22 18:35:59
+# Modified By: Jacky (jackylvm@foxmail.com>)
+# -----
+# Copyright 2018 上海火刀石网络科技有限公司
+# -----
+# HISTORY:
+# Date      			By			Comments
+# --------------------	---------	-------------------
+#
+# -----------------------------------------------------
+# Cellapp进程主要负责与空间位置有关类游戏逻辑，提供将不同Baseapp上的玩家聚合在一个空间中实时交互的功能，Cellapp上通常可实现场景、NPC/怪物、战斗、关卡房间相关逻辑。
+
 
 # --------------模拟一些KBEngine内部的对象---------------------------
 class Enities(dict):
@@ -9,12 +25,12 @@ class Enities(dict):
         dict.__init__(self)
 
 
-class GlobalDataClient(map):
+class GlobalDataClient(dict):
     """"""
 
     def __init__(self):
         """"""
-        map.__init__(self)
+        dict.__init__(self)
 
 
 class EntityCall():
@@ -64,14 +80,22 @@ class OtherClientEntityCall(EntityCall):
         EntityCall.__init__(self)
 
 
-class Vector3():
+class Vector3:
     """"""
 
-    def __init__(self, x, y, z):
+    def __init__(self, x=0, y=0, z=0):
         """"""
         self.x = x
         self.y = y
         self.z = z
+
+
+class PyClient:
+    """"""
+
+    def __init__(self):
+        """"""
+        pass
 
 
 # --------------KBEngine模块的成员属性--------------------------------
@@ -179,14 +203,14 @@ def addWatcher(path, dataType, getFunction):
     功能说明：
         与调试监视系统交互，允许用户向监视系统注册一个监视变量。
         例：
-            >>> def countPlayers( ):
-            >>>     i = 0
-            >>>     for e in KBEngine.entities.values():
-            >>>     	if e.__class__.__name__ == "Avatar":
-            >>>     		i += 1
-            >>>     return i
-            >>>
-            >>> KBEngine.addWatcher( "players", "UINT32", countPlayers )
+            # >>> def countPlayers( ):
+            # >>>     i = 0
+            # >>>     for e in KBEngine.entities.values():
+            # >>>     	if e.__class__.__name__ == "Avatar":
+            # >>>     		i += 1
+            # >>>     return i
+            # >>>
+            # >>> KBEngine.addWatcher( "players", "UINT32", countPlayers )
         这个函数添加一个监视变量在"scripts/players"监视路径之下。函数countPlayers在观察者观察时被调用。
     :param path:创建监视的路径。
     :param dataType:监视变量的值类型。参考: 基本类型
@@ -210,12 +234,12 @@ def MemoryStream():
         MemoryStream对象存储的是二进制信息，提供这个类型是为了让用户能够方便的序列化与反序列化Python基本类型同时能与KBEngine底层序列化规则相同。
     例如：你可以使用这个对象构造一个KBEngine能解析的网络数据包。
     用法：
-        >>> s = KBEngine.MemoryStream()
-        >>> s
-        >>> b''
-        >>> s.append("UINT32", 1)
-        >>> s.pop("UINT32")
-        >>> 1
+        # >>> s = KBEngine.MemoryStream()
+        # >>> s
+        # >>> b''
+        # >>> s.append("UINT32", 1)
+        # >>> s.pop("UINT32")
+        # >>> 1
     目前MemoryStream能够支持的类型仅为基本数据类型。参考: 基本类型
     :return:
         一个新的MemoryStream对象
@@ -298,7 +322,7 @@ def deregisterWriteFileDescriptor(fileDescriptor):
     """
 
 
-def executeRawDatabaseCommand(command, callback, threadID, dbInterfaceName):
+def executeRawDatabaseCommand(command, callback, threadID, dbInterfaceName="default"):
     """
     功能说明：
         这个脚本函数在数据库上执行原始数据库命令，该命令将直接由相关数据库进行解析。
@@ -382,10 +406,10 @@ def getWatcher(path):
     功能说明：
         从KBEngine调试系统中获取一个监视变量的值。
         例子：在baseapp1的Python命令行输入:
-            >>>KBEngine.getWatcher("/root/stats/runningTime")
-            12673648533
-            >>>KBEngine.getWatcher("/root/scripts/players")
-            32133
+            # >>>KBEngine.getWatcher("/root/stats/runningTime")
+            # 12673648533
+            # >>>KBEngine.getWatcher("/root/scripts/players")
+            # 32133
     :param path:string，该变量的绝对路径包括变量名(可以在GUIConsole的watcher页查看)。
     :return:
         该变量的值。
@@ -398,8 +422,8 @@ def getWatcherDir(path):
     功能说明：
         从KBEngine调试系统中获取一个监视目录下的元素列表(目录、变量名)。
         例子：在baseapp1的Python命令行输入:
-            >>>KBEngine.getWatcher("/root")
-            ('stats', 'objectPools', 'network', 'syspaths', 'ThreadPool', 'cprofiles', 'scripts', 'numProxices', 'componentID', 'componentType', 'uid', 'numClients', 'globalOrder', 'username', 'load', 'gametime', 'entitiesSize', 'groupOrder')
+            # >>>KBEngine.getWatcher("/root")
+            # ('stats', 'objectPools', 'network', 'syspaths', 'ThreadPool', 'cprofiles', 'scripts', 'numProxices', 'componentID', 'componentType', 'uid', 'numClients', 'globalOrder', 'username', 'load', 'gametime', 'entitiesSize', 'groupOrder')
     :param path:string，该变量的绝对路径(可以在GUIConsole的watcher页查看)。
     :return:
         监视目录下的元素列表(目录、变量名)。
@@ -422,8 +446,8 @@ def hasRes(res):
         使用这个接口可以判断一个相对路径的资源是否存在。
         注意：资源必须在KBE_RES_PATH之下才可以访问到。
         例子:
-            >>>KBEngine.hasRes("scripts/entities.xml")
-            True
+            # >>>KBEngine.hasRes("scripts/entities.xml")
+            # True
     :param res:string，资源的相对路径。
     :return:
         BOOL, 存在返回True，否则返回False。
@@ -447,17 +471,17 @@ def listPathRes(path, extension):
         获得一个资源目录下的资源列表。
         注意：资源必须在KBE_RES_PATH之下才可以访问到。
     例子:
-        >>>KBEngine.listPathRes("scripts/cell/interfaces")
-        ('/home/kbe/kbengine/demo/res/scripts/cell/interfaces/AI.py', '/home/kbe/kbengine/demo/res/scripts/cell/interfaces/新建文本文档.txt')
-
-        >>>KBEngine.listPathRes("scripts/cell/interfaces", "txt")
-        ('/home/kbe/kbengine/demo/res/scripts/cell/interfaces/新建文本文档.txt')
-
-        >>>KBEngine.listPathRes("scripts/cell/interfaces", "txt|py")
-        ('/home/kbe/kbengine/demo/res/scripts/cell/interfaces/AI.py', '/home/kbe/kbengine/demo/res/scripts/cell/interfaces/新建文本文档.txt')
-
-        >>>KBEngine.listPathRes("scripts/cell/interfaces", ("txt", "py"))
-        ('/home/kbe/kbengine/demo/res/scripts/cell/interfaces/AI.py', '/home/kbe/kbengine/demo/res/scripts/cell/interfaces/新建文本文档.txt')
+        # >>>KBEngine.listPathRes("scripts/cell/interfaces")
+        # ('/home/kbe/kbengine/demo/res/scripts/cell/interfaces/AI.py', '/home/kbe/kbengine/demo/res/scripts/cell/interfaces/新建文本文档.txt')
+        #
+        # >>>KBEngine.listPathRes("scripts/cell/interfaces", "txt")
+        # ('/home/kbe/kbengine/demo/res/scripts/cell/interfaces/新建文本文档.txt')
+        #
+        # >>>KBEngine.listPathRes("scripts/cell/interfaces", "txt|py")
+        # ('/home/kbe/kbengine/demo/res/scripts/cell/interfaces/AI.py', '/home/kbe/kbengine/demo/res/scripts/cell/interfaces/新建文本文档.txt')
+        #
+        # >>>KBEngine.listPathRes("scripts/cell/interfaces", ("txt", "py"))
+        # ('/home/kbe/kbengine/demo/res/scripts/cell/interfaces/AI.py', '/home/kbe/kbengine/demo/res/scripts/cell/interfaces/新建文本文档.txt')
     :param path:string，资源的相对路径。
     :param extension:string，可选参数，扩展名。
     :return:
@@ -472,8 +496,8 @@ def matchPath(res):
         使用相对路径的资源获得资源的绝对路径。
         注意：资源必须在KBE_RES_PATH之下才可以访问到。
     例子:
-        >>>KBEngine.matchPath("scripts/entities.xml")
-        '/home/kbe/kbengine/demo/res/scripts/entities.xml'
+        # >>>KBEngine.matchPath("scripts/entities.xml")
+        # '/home/kbe/kbengine/demo/res/scripts/entities.xml'
     :param res:string，资源的相对路径(包括资源名称)。
     :return:
         string, 资源的绝对路径。
@@ -519,9 +543,9 @@ def raycast(spaceID, layer, src, dst):
         在指定的space中指定的layer中由源坐标向目的坐标射出一道射线，返回碰撞到的坐标点。
         注意：space必须使用addSpaceGeometryMapping加载过几何数据。
         下面是一个例子:
-        	>>> KBEngine.raycast( spaceID, entity.layer, (0, 10, 0), (0,-10,0) )
-	            ((0.0000, 0.0000, 0.0000), ( (0.0000, 0.0000, 0.0000),
-	            (4.0000, 0.0000, 0.0000), (4.0000, 0.0000, 4.0000)), 0)
+        	# >>> KBEngine.raycast( spaceID, entity.layer, (0, 10, 0), (0,-10,0) )
+	        #     ((0.0000, 0.0000, 0.0000), ( (0.0000, 0.0000, 0.0000),
+	        #     (4.0000, 0.0000, 0.0000), (4.0000, 0.0000, 4.0000)), 0)
     :param spaceID:int32, space的id。
     :param layer:int8，几何层。
                 一个space可以同时加载多个navmesh数据，不同的navmesh在不同的layer中，不同的layer可被抽象成地面、水面等等。
@@ -738,9 +762,11 @@ class Entity:
     一个Entity可以通过ENTITYCALL访问在base和client应用程序上的等价的实体。这需要一组远程调用的函数（在实体的.def文件里指定）。
     """
 
-    # -------------KBEngine.Entity类的成员属性-------------------------------------------
-    __allClients = AllClientEntityCall()
+    def __init__(self):
+        """"""
+        pass
 
+    # -------------KBEngine.Entity类的成员属性-------------------------------------------
     @property
     def allClients(self):
         """
@@ -754,9 +780,8 @@ class Entity:
                 Entity.otherClients
         :return:
         """
+        self.__allClients = PyClient()
         return self.__allClients
-
-    __base = BaseEntityCall()
 
     @property
     def base(self):
@@ -770,9 +795,8 @@ class Entity:
             只读的，ENTITYCALL
         :return:
         """
+        self.__base = BaseEntityCall()
         return self.__base
-
-    __className = ""
 
     @property
     def className(self):
@@ -781,9 +805,7 @@ class Entity:
             类型： 只读，string
         :return:
         """
-        return self.__className
-
-    __client = ClientEntityCall()
+        return ""
 
     @property
     def client(self):
@@ -797,9 +819,8 @@ class Entity:
             只读的，ENTITYCALL
         :return:
         """
+        self.__client = ClientEntityCall()
         return self.__client
-
-    __controlledBy = BaseEntityCall()
 
     @property
     def controlledBy(self):
@@ -813,9 +834,8 @@ class Entity:
             BaseEntityCall
         :return:
         """
+        self.__controlledBy = BaseEntityCall()
         return self.__controlledBy
-
-    __direction = Vector3()
 
     @property
     def direction(self):
@@ -827,9 +847,8 @@ class Entity:
             Vector3, 其中包含(roll, pitch, yaw)，以弧度表示。
         :return:
         """
+        self.__direction = Vector3()
         return self.__direction
-
-    __hasWitness = False
 
     @property
     def hasWitness(self):
@@ -839,9 +858,7 @@ class Entity:
         类型：
             只读的， bool
         """
-        return self.__hasWitness
-
-    __id = 0
+        return False
 
     @property
     def id(self):
@@ -851,9 +868,7 @@ class Entity:
         类型：
             只读的，int32
         """
-        return self.__id
-
-    __isDestroyed = False
+        return 0
 
     @property
     def isDestroyed(self):
@@ -862,20 +877,7 @@ class Entity:
         类型：
             只读的， bool
         """
-        return self.__isDestroyed
-
-    __isOnGround = False
-
-    @property
-    def isOnGround(self):
-        """
-        如果这个属性的值为True，Entity在地面上，否则为False。
-        类型：
-            只读的， bool
-        """
-        return self.__isDestroyed
-
-    __isWitnessed = False
+        return False
 
     @property
     def isWitnessed(self):
@@ -887,9 +889,7 @@ class Entity:
         类型：
             只读的， bool
         """
-        return self.__isWitnessed
-
-    __layer = 0
+        return False
 
     @property
     def layer(self):
@@ -901,9 +901,7 @@ class Entity:
             int8
         :return:
         """
-        return self.__layer
-
-    __otherClients = OtherClientEntityCall()
+        return 0
 
     @property
     def otherClients(self):
@@ -919,22 +917,8 @@ class Entity:
             Entity.clientEntity
             Entity.otherClients
         """
+        self.__otherClients = PyClient()
         return self.__otherClients
-
-    __pitch = 0.0
-
-    @property
-    def pitch(self):
-        """
-        实体在世界空间中的俯仰角，绕X轴旋转。
-        这个属性也可以通过direction属性访问。
-        Type: Float，只读属性。
-        """
-        return self.__pitch
-
-        # 该属性是不是一个这样定义，不确定
-
-    __position = Vector3()
 
     @property
     def position(self):
@@ -943,26 +927,14 @@ class Entity:
         例子：
             self.position.y = 10.0
         如果你想拷贝这个属性值可以使用如下方式：
-	    import Math
-	    self.copyPosition = Math.Vector3( self.position )
+        import Math
+        self.copyPosition = Math.Vector3( self.position )
         类型：
             Vector3
         :return:
         """
+        self.__position = Vector3()
         return self.__position
-
-    __roll = 0.0
-
-    @property
-    def roll(self):
-        """
-        实体在世界空间中的横滚角，绕Z轴旋转。
-        这个属性也可以通过direction属性访问。
-        Type: Float，只读属性。
-        """
-        return self.__roll
-
-    __spaceID = 0
 
     @property
     def spaceID(self):
@@ -971,42 +943,57 @@ class Entity:
         类型：
             只读的，Integer。
         """
-        return self.__spaceID
+        return 0
 
-    # 实体的最大xz轴移动速度，这个属性通常要比实际移动速度要大一些，
-    # 服务端通过这个属性检查客户端的移动合法性，如果移动距离超出速度限制则被强制拉回上一个坐标位置。
-    #
-    # 其他参考：
-    #     Entity.topSpeedY
-    # 类型：
-    #     float
-    topSpeed = 0.0
+    @property
+    def topSpeed(self):
+        """
+        实体的最大xz轴移动速度，这个属性通常要比实际移动速度要大一些，
+        服务端通过这个属性检查客户端的移动合法性，如果移动距离超出速度限制则被强制拉回上一个坐标位置。
 
-    # 实体的最大y轴移动速度，这个属性通常要比实际移动速度要大一些，
-    # 服务端通过这个属性检查客户端的移动合法性，如果移动距离超出速度限制则被强制拉回上一个坐标位置。
-    # 其他参考：
-    #     Entity.topSpeed
-    # 类型：
-    #     float
-    topSpeedY = 0.0
+        其他参考：
+            Entity.topSpeedY
+        类型：
+            float
+        :return:
+        """
+        return 0.0
 
-    # 这个属性指定Entity的易变类数据同步到客户端的策略。
-    # 易变类数据包括实体的坐标position和实体的朝向direction，易变类数据由于极易改变的特性，引擎底层使用了一套优化的方案将其同步到客户端。
-    # 这个属性是四个float（position，yaw，pitch，roll）代表距离值，当一个实体靠近当前实体达到距离则服务端向其同步相关数据。如果距离值大于View半径则代表总是同步。
-    #
-    # 还有一个特殊的bool属性optimized，它的作用是控制服务器同步时是否进行优化，目前主要的优化是Y轴。
-    # 如果为true，在一些行为(如：navigate)导致服务器能确定实体在地面时，服务器不同步实体的Y轴坐标，当同步大量实体时能节省大量带宽，默认为true。
-    #
-    # 用户也可以在.def制定不同实体的同步策略：
-    #     < Volatile >
-    #     < position / > <!-- 总是同步 -->
-    #     < yaw / > <!-- 总是同步 -->
-    #     < pitch > 20 < / pitch > <!-- 相距20米或以内同步 -->
-    #     < optimized > true < / optimized >
-    #     < / Volatile > <!-- roll未指明则总是同步 -->
-    # 类型：
-    #     sequence， 四个浮点数(float, float, float, float)
-    volatileInfo = (0.0, 0.0, 0.0, 0.0)
+    @property
+    def topSpeedY(self):
+        """
+        实体的最大y轴移动速度，这个属性通常要比实际移动速度要大一些，
+        服务端通过这个属性检查客户端的移动合法性，如果移动距离超出速度限制则被强制拉回上一个坐标位置。
+        其他参考：
+            Entity.topSpeed
+        类型：
+            float
+        :return:
+        """
+        return 0.0
+
+    @property
+    def volatileInfo(self):
+        """
+        这个属性指定Entity的易变类数据同步到客户端的策略。
+        易变类数据包括实体的坐标position和实体的朝向direction，易变类数据由于极易改变的特性，引擎底层使用了一套优化的方案将其同步到客户端。
+        这个属性是四个float（position，yaw，pitch，roll）代表距离值，当一个实体靠近当前实体达到距离则服务端向其同步相关数据。如果距离值大于View半径则代表总是同步。
+
+        还有一个特殊的bool属性optimized，它的作用是控制服务器同步时是否进行优化，目前主要的优化是Y轴。
+        如果为true，在一些行为(如：navigate)导致服务器能确定实体在地面时，服务器不同步实体的Y轴坐标，当同步大量实体时能节省大量带宽，默认为true。
+
+        用户也可以在.def制定不同实体的同步策略：
+            < Volatile >
+            < position / > <!-- 总是同步 -->
+            < yaw / > <!-- 总是同步 -->
+            < pitch > 20 < / pitch > <!-- 相距20米或以内同步 -->
+            < optimized > true < / optimized >
+            < / Volatile > <!-- roll未指明则总是同步 -->
+        类型：
+            sequence， 四个浮点数(float, float, float, float)
+            :return: 
+        """
+        return 0.0, 0.0, 0.0, 0.0
 
     # ----------------------方法---------------------------
     def accelerate(self, accelerateType, acceleration):
@@ -1355,7 +1342,7 @@ class Entity:
         """
         pass
 
-    def writeToDB(self, shouldAutoLoad, dbInterfaceName):
+    def writeToDB(self, shouldAutoLoad, dbInterfaceName="default"):
         """
         功能说明：
             这个函数保存与这个实体相关的数据到数据库，包括base实体的数据。在数据确认传到数据库之前base实体的onWriteToDB函数会被调用。
@@ -1425,6 +1412,13 @@ class Entity:
         """
         pass
 
+    def onLoseControlledBy(self, id):
+        """
+        如果这个函数在脚本中有实现，当Entity.controlledBy 所关联的实体丢失时改回调方法被调用。
+        :param id:controlledBy实体的ID
+        :return:
+        """
+
     def onLoseWitness(self):
         """
             如果这个函数在脚本中有实现，当实体解除Witness时，该回调被触发。
@@ -1489,15 +1483,6 @@ class Entity:
         """
         pass
 
-    def onTimer(self, timerHandle, userData):
-        """
-        功能说明：
-            这个函数当一个与此实体关联的定时器触发的时候被调用。一个定时器可以使用Entity.addTimer函数添加。
-        :param timerHandle:定时器的id。
-        :param userData: 传进Entity.addTimer的integer用户数据。
-        """
-        pass
-
     def onTeleportFailure(self):
         """
             如果这个函数在脚本中有实现，当用户调用Entity.teleport失败时该回调被调用。
@@ -1508,6 +1493,15 @@ class Entity:
         """
             如果这个函数在脚本中有实现，当用户调用Entity.teleport成功时该回调被调用。
         :param nearbyEntity:这个参数由用户调用 Entity.teleport时给出。这是一个real实体。
+        """
+        pass
+
+    def onTimer(self, timerHandle, userData):
+        """
+        功能说明：
+            这个函数当一个与此实体关联的定时器触发的时候被调用。一个定时器可以使用Entity.addTimer函数添加。
+        :param timerHandle:定时器的id。
+        :param userData: 传进Entity.addTimer的integer用户数据。
         """
         pass
 
