@@ -149,6 +149,31 @@ def scriptLogType(logType):
     pass
 
 
+def urlopen(url, callback=None, postData="", headers=None):
+    """
+    功能说明：
+    这个脚本函数在提供对外HTTP/HTTPS异步请求。
+    参数： url 有效的HTTP/HTTPS网址，字符串类型。
+    callback 可选参数，带有请求执行结果的回调对象（比如说是一个函数）。这个回调带有5个参数：HTTP请求返回码（如：200)，返回的内容，返回的HTTP协议头，是否成功，请求的网址。
+    声明样例：
+        def onHttpCallback(httpcode, data, headers, success, url):
+                print(httpcode, data, headers, success, url)
+        如同上面的例子所示:
+        httpcode:参数对应的就是“HTTP请求返回码”，这个结果集合参数是一个整形值。
+        data:参数则是“返回的内容”，它是一个字符串。
+        headers:参数是“服务器返回的HTTP协议头”，如：{"Content-Type": "application/x-www-form-urlencoded"}，它是一个字典。
+        success:则对应了“执行是否成功”，当请求执行有错误时，为False，可以通过httpcode进一步判断错误信息。
+        url:是“请求所用的网址。
+    postData 可选参数，默认是GET方式请求服务器，如果需要POST方式请提供需要POST的内容，引擎将自动使用POST方式请求服务器，它是一个bytes。
+    headers 可选参数，请求时使用的HTTP头，如：{"Content-Type": "application/x-www-form-urlencoded"}，它是一个字典。
+    :param url:
+    :param callback:
+    :param postData:
+    :param headers:
+    :return:
+    """
+
+
 # 回调函数
 def onInit(isReload):
     """
@@ -409,6 +434,14 @@ class Entity:
         :return:
         """
         pass
+
+    def isPlayer(self):
+        """
+        功能说明：
+            这个函数返回这个Entity是否是当前客户端所控制的Player。
+        :return:bool， 如果是当前客户端所控制的Player返回True，否则返回False。
+        """
+        return False
 
     def onEnterWorld(self):
         """
