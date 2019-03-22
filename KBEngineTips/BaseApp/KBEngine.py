@@ -478,7 +478,7 @@ def deregisterWriteFileDescriptor(fileDescriptor):
     pass
 
 
-def executeRawDatabaseCommand(command, callback, threadID, dbInterfaceName="default"):
+def executeRawDatabaseCommand(command, callback=None, threadID=0, dbInterfaceName="default"):
     """
     功能说明：
         这个脚本函数在数据库上执行原始数据库命令，该命令将直接由相关数据库进行解析。
