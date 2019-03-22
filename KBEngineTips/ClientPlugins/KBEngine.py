@@ -1,4 +1,19 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# File Created: 2019-03-22 16:52:02
+# Author: Jacky (jackylvm@foxmail.com>)
+# -----
+# Last Modified: 2019-03-22 16:52:02
+# Modified By: Jacky (jackylvm@foxmail.com>)
+# -----
+# Copyright 2018 上海火刀石网络科技有限公司
+# -----
+# HISTORY:
+# Date      			By			Comments
+# --------------------	---------	-------------------
+#
+# -----------------------------------------------------
+
 
 class Entities(dict):
     """"""
@@ -157,7 +172,8 @@ class Entity:
         :return:Tuple, 其中包含(roll, pitch, yaw)，以弧度表示。
         """
         # 这样返回只是要告诉你他返回的是一个元组,具体内容要看具体实现
-        return (0, 0, 0)
+        _dir = (0, 0, 0)
+        return _dir
 
     @property
     def id(self):
@@ -215,7 +231,11 @@ class Entity:
 
     @property
     def className(self):
-        """"""
+        """
+        实体的类名
+            类型：只读，string
+        :return:
+        """
         return self.__class__.__name__
 
     def baseCall(self, methodName, methodArgs):
