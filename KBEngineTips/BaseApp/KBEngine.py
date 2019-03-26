@@ -1481,3 +1481,81 @@ class Proxy(Entity):
         :return:
         """
         pass
+
+
+class EntityComponent:
+    """"""
+
+    def __init__(self):
+        """"""
+
+    @property
+    def allClients(self):
+        """"""
+        self.__all_clients = EntityCall()
+        return self.__all_clients
+
+    @property
+    def client(self):
+        """"""
+        self.__client = EntityCall()
+        return self.__client
+
+    @property
+    def className(self):
+        """"""
+        return "self"
+
+    @property
+    def ownerID(self):
+        """"""
+        self.__owner_id = 0
+        return self.__owner_id
+
+    @property
+    def owner(self):
+        """"""
+        self.__owner = Entity()
+        return self.__owner
+
+    def addTimer(self, initialOffset, repeatOffset=0.0, userArg=0):
+        """
+        注册一个定时器，定时器由回调函数onTimer触发。
+        :param initialOffset:必须,指定定时器从注册到第一次回调的时间间隔（秒）。
+        :param repeatOffset:可选,指定第一次回调执行后每次执行的时间间隔（秒）。必须用函数delTimer移除定时器，否则它会一直重复下去。值小于等于0将被忽略。
+        :param userArg:可选,指定底层回调”onTimer”时的userArg参数值。
+        :return:int,返回timer的内部id，这个id可用于delTimer移除定时器。
+        """
+        _timer_id = 10
+        return _timer_id
+
+    def delTimer(self, id):
+        """
+        移除一个注册的定时器，移除后的定时器不再执行。
+        :param id:必须,要移除的定时器id。
+        :return:bool,是否成功移除
+        """
+        _delete_success = True
+        return _delete_success
+
+    def onAttached(self, owner):
+        """
+        在附加到拥有者实体时被调用。
+        :param owner:组件拥有者的实体对象
+        :return:
+        """
+
+    def onDetached(self, owner):
+        """
+        在从拥有者实体移除时被调用。
+        :param owner:组件拥有者的实体对象
+        :return:
+        """
+
+    def onTimer(self, timerHandle, userData):
+        """
+        当一个与此实体关联的定时器触发的时候被调用。
+        :param timerHandle:int,定时器的id。
+        :param userData:int,传进EntityComponent.addTimer的integer用户数据。
+        :return:
+        """
