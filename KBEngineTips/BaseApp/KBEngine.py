@@ -73,6 +73,10 @@ class GlobalDataClient(dict):
         """"""
         dict.__init__(self)
 
+    def has_key(self, key):
+        """"""
+        pass
+
 
 class EntityCall:
     """"""
@@ -1517,6 +1521,11 @@ class EntityComponent:
         """"""
         self.__owner = Entity()
         return self.__owner
+
+    @property
+    def name(self):
+        """"""
+        return "EntityComponent"
 
     def addTimer(self, initialOffset, repeatOffset=0.0, userArg=0):
         """

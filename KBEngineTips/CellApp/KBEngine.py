@@ -32,8 +32,12 @@ class GlobalDataClient(dict):
         """"""
         dict.__init__(self)
 
+    def has_key(self, key):
+        """"""
+        pass
 
-class EntityCall():
+
+class EntityCall:
     """"""
 
     def __init__(self):
@@ -1308,8 +1312,7 @@ class Entity:
         """
         pass
 
-    def navigate(self, destination, velocity, distance, maxMoveDistance, maxSearchDistance, faceMovement, layer,
-                 userData):
+    def navigate(self, destination, velocity, distance, maxMoveDistance, maxSearchDistance, faceMovement, layer, userData):
         """
         功能说明：
             使用导航系统来使这个Entity向一个目标点移动，成功或失败会调用回调函数。
