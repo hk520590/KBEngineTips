@@ -15,6 +15,61 @@
 # -----------------------------------------------------
 # Cellapp进程主要负责与空间位置有关类游戏逻辑，提供将不同Baseapp上的玩家聚合在一个空间中实时交互的功能，Cellapp上通常可实现场景、NPC/怪物、战斗、关卡房间相关逻辑。
 
+# ----------------服务器定义的常量--------------------------------------------
+SERVER_SUCCESS = 0  # 成功。
+SERVER_ERR_SRV_NO_READY = 1  # 服务器没有准备好。
+SERVER_ERR_SRV_OVERLOAD = 2  # 服务器负载过重。
+SERVER_ERR_ILLEGAL_LOGIN = 3  # 非法登录。
+SERVER_ERR_NAME_PASSWORD = 4  # 用户名或者密码不正确。
+SERVER_ERR_NAME = 5  # 用户名不正确。
+SERVER_ERR_PASSWORD = 6  # 密码不正确。
+SERVER_ERR_ACCOUNT_CREATE_FAILED = 7  # 创建账号失败（已经存在一个相同的账号）。
+SERVER_ERR_BUSY = 8  # 操作过于繁忙(例如：在服务器前一次请求未执行完毕的情况下连续N次创建账号)。
+SERVER_ERR_ACCOUNT_LOGIN_ANOTHER = 9  # 当前账号在另一处登录了。
+SERVER_ERR_ACCOUNT_IS_ONLINE = 10  # 你已经登录了，服务器拒绝再次登录。
+SERVER_ERR_PROXY_DESTROYED = 11  # 与客户端关联的proxy在服务器上已经销毁。
+SERVER_ERR_ENTITYDEFS_NOT_MATCH = 12  # entityDefs不匹配。
+SERVER_ERR_IN_SHUTTINGDOWN = 13  # 服务器正在关闭中
+SERVER_ERR_NAME_MAIL = 14  # email地址错误。
+SERVER_ERR_ACCOUNT_LOCK = 15  # 账号被冻结。
+SERVER_ERR_ACCOUNT_DEADLINE = 16  # 账号已过期。
+SERVER_ERR_ACCOUNT_NOT_ACTIVATED = 17  # 账号未激活。
+SERVER_ERR_VERSION_NOT_MATCH = 18  # 与服务端的版本不匹配。
+SERVER_ERR_OP_FAILED = 19  # 操作失败。
+SERVER_ERR_SRV_STARTING = 20  # 服务器正在启动中。
+SERVER_ERR_ACCOUNT_REGISTER_NOT_AVAILABLE = 21  # 未开放账号注册功能。
+SERVER_ERR_CANNOT_USE_MAIL = 22  # 不能使用email地址。
+SERVER_ERR_NOT_FOUND_ACCOUNT = 23  # 找不到此账号。
+SERVER_ERR_DB = 24  # 数据库错误(请检查dbmgr日志和DB)。
+SERVER_ERR_USER1 = 25  # 用户自定义错误码1
+SERVER_ERR_USER2 = 26  # 用户自定义错误码2
+SERVER_ERR_USER3 = 27  # 用户自定义错误码3
+SERVER_ERR_USER4 = 28  # 用户自定义错误码4
+SERVER_ERR_USER5 = 29  # 用户自定义错误码5
+SERVER_ERR_USER6 = 30  # 用户自定义错误码6
+SERVER_ERR_USER7 = 31  # 用户自定义错误码7
+SERVER_ERR_USER8 = 32  # 用户自定义错误码8
+SERVER_ERR_USER9 = 33  # 用户自定义错误码9
+SERVER_ERR_USER10 = 34  # 用户自定义错误码10
+SERVER_ERR_LOCAL_PROCESSING = 35  # 本地处理，通常为某件事情不由第三方处理而是由KBE服务器处理
+SERVER_ERR_ACCOUNT_RESET_PASSWORD_NOT_AVAILABLE = 36  # 未开放账号重置密码功能。
+SERVER_ERR_ACCOUNT_LOGIN_ANOTHER_SERVER = 37  # 当前账号在其他服务器登陆了
+SERVER_ERR_MAX = 38  # 请把这条放在所有错误的最后面，这本身不是一个错误标识，仅表示一共有多少条错误定义
+
+# 设置的标志
+APP_FLAGS_NONE = 0  # 默认的(未设置标记)
+APP_FLAGS_NOT_PARTCIPATING_LOAD_BALANCING = 1  # 不参与负载均衡
+
+# --------------日志输出类型为调试类型,由scriptLogType设置。---------------------------------
+LOG_TYPE_DBG = 21003
+LOG_TYPE_ERR = 21002
+LOG_TYPE_INFO = 21001
+LOG_TYPE_NORMAL = 21000
+LOG_TYPE_WAR = 21004
+
+# 这个常量用于Entity.shouldAutoBackup和Entity.shouldAutoArchive属性。
+# 这个值意指在下一次认为可以的时候自动备份该实体，然后这个属性自动设为False（0）。
+NEXT_ONLY = 2
 
 # --------------模拟一些KBEngine内部的对象---------------------------
 class Enities(dict):
@@ -671,6 +726,10 @@ def urlopen(url, callback=None, postData="", headers=None):
     """
 
 
+def kbassert():
+    """"""
+
+
 # --------------------回调函数-----------------------
 def onCellAppData(key, value):
     """
@@ -1033,6 +1092,13 @@ class Entity:
             :return: 
         """
         return 0.0, 0.0, 0.0, 0.0
+
+    @property
+    def isOnGround(self):
+        """
+        是否在地面上
+        """
+        return True
 
     # ----------------------方法---------------------------
     def accelerate(self, accelerateType, acceleration):
@@ -1399,6 +1465,41 @@ class Entity:
         """
         pass
 
+    def registerEvent(self, eventName, callback):
+        """
+        功能说明：
+            注册事件
+        :param eventName:
+        :param callback:
+        :return:
+        """
+
+    def deregisterEvent(self, eventName, callback):
+        """
+        功能说明：
+            注销事件
+        :param eventName:
+        :param callback:
+        :return:
+        """
+
+    def fireEvent(self, eventName, *args):
+        """
+        功能说明：
+            触发事件
+        :param eventName:
+        :type args: 可选参数
+        :return:
+        """
+
+    def getComponent(self, componentName, *args):
+        """
+        通过组件名获取组件
+        :param componentName:
+        :param args:
+        :return:
+        """
+
     # ------------------------------回调函数-----------------------------------------------
     def onDestroy(self):
         """
@@ -1572,6 +1673,14 @@ class Entity:
         """
         pass
 
+    def getWitnesses(self):
+        """
+        功能说明:
+            这个函数返回观察该Entity的所有观察者(玩家)。
+        :return:tuple,包含零个或者多个Entity的数组.
+        """
+        return Entity(), Entity()
+
 
 class EntityComponent:
     """"""
@@ -1584,17 +1693,17 @@ class EntityComponent:
         """"""
         self.__all_clients = EntityCall()
         return self.__all_clients
+    @property
+    def otherClients(self):
+        """"""
+        self.__other_clients = EntityCall()
+        return self.__other_clients
 
     @property
     def client(self):
         """"""
         self.__client = EntityCall()
         return self.__client
-
-    @property
-    def className(self):
-        """"""
-        return "self"
 
     @property
     def ownerID(self):
@@ -1607,6 +1716,22 @@ class EntityComponent:
         """"""
         self.__owner = Entity()
         return self.__owner
+
+    @property
+    def name(self):
+        """"""
+        return "EntityComponent"
+
+    @property
+    def isDestroyed(self):
+        """"""
+        return False
+
+    @property
+    def base(self):
+        """"""
+        self.__base = Entity()
+        return self.__base
 
     def addTimer(self, initialOffset, repeatOffset=0.0, userArg=0):
         """
@@ -1627,6 +1752,10 @@ class EntityComponent:
         """
         _delete_success = True
         return _delete_success
+
+    def clientEntity(self):
+        """"""
+        return None
 
     def onAttached(self, owner):
         """
@@ -1649,3 +1778,11 @@ class EntityComponent:
         :param userData:int,传进EntityComponent.addTimer的integer用户数据。
         :return:
         """
+
+
+class Space(Entity):
+    """"""
+
+    def __init__(self):
+        """"""
+        Entity.__init__(self)
