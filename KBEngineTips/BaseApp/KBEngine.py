@@ -56,6 +56,9 @@ SERVER_ERR_ACCOUNT_RESET_PASSWORD_NOT_AVAILABLE = 36  # 未开放账号重置密
 SERVER_ERR_ACCOUNT_LOGIN_ANOTHER_SERVER = 37  # 当前账号在其他服务器登陆了
 SERVER_ERR_MAX = 38  # 请把这条放在所有错误的最后面，这本身不是一个错误标识，仅表示一共有多少条错误定义
 
+# 设置的标志
+APP_FLAGS_NONE = 0  # 默认的(未设置标记)
+APP_FLAGS_NOT_PARTCIPATING_LOAD_BALANCING = 1  # 不参与负载均衡
 
 # --------------模拟一些KBEngine内部的对象---------------------------
 class Enities(dict):
@@ -120,22 +123,22 @@ class CELLDATADICT(dict):
 # --------------KBEngine模块的成员属性--------------------------------
 # --------------Proxy.onLogOnAttempt-------------------------------
 # 如果Proxy实体已经存在一个client绑定关系，那么将踢出之前的client。
-LOG_ON_ACCEPT = 0
+LOG_ON_ACCEPT = 1
 # 拒绝当前client与Proxy实体绑定。
 LOG_ON_REJECT = 0
 # 当前请求client将会等待直到Proxy实体完全销毁，底层再完成后续绑定过程。
 # 在这返回之前Proxy.destroy或者Proxy.destroyCellEntity 应该被调用。
-LOG_ON_WAIT_FOR_DESTROY = 0
+LOG_ON_WAIT_FOR_DESTROY = 2
 # --------------日志输出类型为调试类型,由scriptLogType设置。---------------------------------
-LOG_TYPE_DBG = 0
-LOG_TYPE_ERR = 0
-LOG_TYPE_INFO = 0
-LOG_TYPE_NORMAL = 0
-LOG_TYPE_WAR = 0
+LOG_TYPE_DBG = 21003
+LOG_TYPE_ERR = 21002
+LOG_TYPE_INFO = 21001
+LOG_TYPE_NORMAL = 21000
+LOG_TYPE_WAR = 21004
 
 # 这个常量用于Entity.shouldAutoBackup和Entity.shouldAutoArchive属性。
 # 这个值意指在下一次认为可以的时候自动备份该实体，然后这个属性自动设为False（0）。
-NEXT_ONLY = 0
+NEXT_ONLY = 2
 
 # 这是正运行在当前Python环境的组件。（至今为止）可能值有'cell', 'base', 'client', 'database', 'bot' 和 'editor'。
 component = ""
@@ -222,6 +225,14 @@ def address():
     """
     功能说明：
         返回内部网络接口的地址。
+    """
+    pass
+
+
+def kbassert(*args):
+    """
+    功能说明：
+        允许assert底层，用于调试脚本某个时机时底层状态
     """
     pass
 
@@ -1094,7 +1105,18 @@ class Entity:
         """
         pass
 
-    def createCellEntity(self, cellEntityMB):
+    def delTimer(self, id):
+        """
+        功能说明：
+            函数delTimer用于移除一个注册的定时器，移除后的定时器不再执行。
+            只执行1次的定时器在执行回调后自动移除，不必要使用delTimer移除。
+            如果delTimer函数使用一个无效的id（例如已经移除），将会产生错误。
+            到Entity.addTimer参考定时器的一个使用例子。
+        :param id:integer，它指定要移除的定时器id。
+        """
+        pass
+
+    def createCellEntity(self, cellEntityMB=None):
         """
         功能说明：
             请求在一个cell里面创建一个关联的实体。
@@ -1117,7 +1139,7 @@ class Entity:
         """
         pass
 
-    def createCellEntityInNewSpace(self, cellappIndex):
+    def createCellEntityInNewSpace(self, cellappIndex=0):
         """
         功能说明：
             在cellapp上创建一个空间(space)并且将该实体的cell创建到这个新的空间中，它请求通过cellappmgr来完成。
@@ -1130,17 +1152,6 @@ class Entity:
                             例如：将大地图space放到几个固定的cellapp中，并将这些cellapp设置为不参与负载均衡，其他cellapp用于放置副本space。
                             创建副本space时cellappIndex设置为0或者None，副本地图的消耗将不会影响到大地图进程，从而保证了主场景的流畅。
         :return:
-        """
-        pass
-
-    def delTimer(self, id):
-        """
-        功能说明：
-            函数delTimer用于移除一个注册的定时器，移除后的定时器不再执行。
-            只执行1次的定时器在执行回调后自动移除，不必要使用delTimer移除。
-            如果delTimer函数使用一个无效的id（例如已经移除），将会产生错误。
-            到Entity.addTimer参考定时器的一个使用例子。
-        :param id:integer，它指定要移除的定时器id。
         """
         pass
 
@@ -1163,17 +1174,7 @@ class Entity:
         """
         pass
 
-    def teleport(self, baseEntityMB):
-        """
-        功能说明：
-            teleport会瞬移这个实体的cell部分到参数指定的实体所在的空间。
-            在抵达新的空间后，Entity.onTeleportSuccess被调用。这可以用来在新的空间里移动该实体到合适的位置。
-        :param baseEntityMB:实体应该移到的指定实体所在的空间，baseEntityMB即指定实体的EntityCall。
-                            当成功的时候，与此参数相关联的cell实体会被传入到Entity.onTeleportSuccess函数。
-        """
-        pass
-
-    def writeToDB(self, callback, shouldAutoLoad, dbInterfaceName="default"):
+    def writeToDB(self, callback=None, shouldAutoLoad=False, dbInterfaceName="default"):
         """
         功能说明：
             该函数保存这个实体的存档属性到数据库，使得以后需要的时候可以重新从数据库加载。
@@ -1191,6 +1192,41 @@ class Entity:
         :return:
         """
         pass
+
+    def registerEvent(self, eventName, callback):
+        """
+        功能说明：
+            注册事件
+        :param eventName:
+        :param callback:
+        :return:
+        """
+
+    def deregisterEvent(self, eventName, callback):
+        """
+        功能说明：
+            注销事件
+        :param eventName:
+        :param callback:
+        :return:
+        """
+
+    def fireEvent(self, eventName, *args):
+        """
+        功能说明：
+            触发事件
+        :param eventName:
+        :type args: 可选参数
+        :return:
+        """
+
+    def getComponent(self, componentName, *args):
+        """
+        通过组件名获取组件
+        :param componentName:
+        :param args:
+        :return:
+        """
 
     # Entity类回调函数
     def onCreateCellFailure(self):
@@ -1242,22 +1278,6 @@ class Entity:
             这个函数当一个与此实体关联的定时器触发的时候被调用。一个定时器可以使用Entity.addTimer函数添加。
         :param timerHandle:定时器的id。
         :param userData:传进Entity.addTimer的integer用户数据。
-        """
-        pass
-
-    def onTeleportFailure(self):
-        """
-        如果这个函数在脚本中有实现，当用户调用Entity.teleport失败时该回调被调用。
-        :return:
-        """
-        pass
-
-    def onTeleportSuccess(self, nearbyEntity):
-        """
-        功能说明:
-            如果这个函数在脚本中有实现，当用户调用Entity.teleport失败时该回调被调用。
-        :param nearbyEntity: 这个参数由用户调用 Entity.teleport时给出。这是一个real实体。
-        :return:
         """
         pass
 
@@ -1568,3 +1588,98 @@ class EntityComponent:
         :param userData:int,传进EntityComponent.addTimer的integer用户数据。
         :return:
         """
+
+
+class Space:
+    """"""
+
+    def __init__(self):
+        """"""
+
+    @property
+    def cell(self):
+        """
+        说明：
+            cell是用于联系cell实体的ENTITYCALL。这个属性是只读的，且如果这个base实体没有关联的cell时属性是None。
+            类型： 只读 CellEntityCall
+        """
+        self.__cell = CellEntityCall()
+        return self.__cell
+
+    @property
+    def name(self):
+        """"""
+        return "Space"
+
+    @property
+    def client(self):
+        """
+        说明：
+            client是用于联系客户端的EntityCall。这个属性是只读的，且如果这个base实体没有关联的客户端时属性是None。
+        类型： 只读 ClientEntityCall
+        """
+        self.__client = ClientEntityCall()
+        return self.__client
+
+    @property
+    def ownerID(self):
+        """"""
+        self.__owner_id = 0
+        return self.__owner_id
+
+    @property
+    def owner(self):
+        """"""
+        self.__owner = Entity()
+        return self.__owner
+
+    @property
+    def isDestroyed(self):
+        """
+        说明：
+          如果该Base实体已经被销毁了，这个属性为True。
+          类型： bool
+        """
+        self.__isDestroyed = False
+        return self.__isDestroyed
+
+    def addTimer(self, initialOffset, repeatOffset=0, userArg=0):
+        """
+        功能说明：
+            注册一个定时器，定时器由回调函数onTimer触发，回调函数将在"initialOffset"秒后被执行第1次，而后将每间隔"repeatOffset"秒执行1次，可设定一个用户参数"userArg"（仅限integer类型）。
+            onTimer 函数必须在entity的base部分被定义，且带有2个参数，第1个integer类型的是timer的id（可用于移除timer的"delTimer"函数），第2个是用户参数"userArg"。
+            例子:
+                # 这里是使用addTimer的一个例子
+                import KBEngine
+                class MyBaseEntity( KBEngine.Base ):
+                    def __init__( self ):
+                        KBEngine.Base.__init__( self )
+
+                        # 增加一个定时器，5秒后执行第1次，而后每1秒执行1次，用户参数是9
+                        self.addTimer( 5, 1, 9 )
+
+                        # 增加一个定时器，1秒后执行，用户参数缺省是0
+                        self.addTimer( 1 )
+                    # Base的定时器回调"onTimer"被调用
+                    def onTimer( self, id, userArg ):
+                        print "MyBaseEntity.onTimer called: id %i, userArg: %i" % ( id, userArg )
+                        # if 这是不断重复的定时器，当不再需要该定时器的时候，调用下面函数移除:
+                        #     self.delTimer( id )
+        :param initialOffset:float，指定定时器从注册到第一次回调的时间间隔（秒）。
+        :param repeatOffset:float，指定第一次回调执行后每次执行的时间间隔（秒）。必须用函数delTimer移除定时器，否则它会一直重复下去。值小于等于0将被忽略。
+        :param userArg:integer，指定底层回调"onTimer"时的userArg参数值。
+        :return
+            integer，该函数返回timer的内部id，这个id可用于delTimer移除定时器。
+        """
+        pass
+
+    def delTimer(self, id):
+        """
+        功能说明：
+            函数delTimer用于移除一个注册的定时器，移除后的定时器不再执行。
+            只执行1次的定时器在执行回调后自动移除，不必要使用delTimer移除。
+            如果delTimer函数使用一个无效的id（例如已经移除），将会产生错误。
+            到Entity.addTimer参考定时器的一个使用例子。
+        :param id:integer，它指定要移除的定时器id。
+        """
+        pass
