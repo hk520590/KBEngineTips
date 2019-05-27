@@ -143,7 +143,7 @@ def onLoginAppShutDown():
     pass
 
 
-def onReuqestLogin(loginName, password, clientType, datas):
+def onRequestLogin(loginName, password, clientType, datas):
     """
     功能说明：
         客户端请求服务器登陆账号时回调。
