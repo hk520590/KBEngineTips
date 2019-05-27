@@ -284,7 +284,7 @@ def createEntity():
     pass
 
 
-def createEntityAnywhere(entityType, *params, callback):
+def createEntityAnywhere(entityType, params, callback):
     """
         功能说明：
             创建一个新的Entity实体，服务端可能选择任何的Baseapp来创建Entity实体。
@@ -310,7 +310,7 @@ def createEntityAnywhere(entityType, *params, callback):
     pass
 
 
-def createEntityRemotely(entityType, baseMB, *params, callback):
+def createEntityRemotely(entityType, baseMB, params, callback):
     """
     功能说明：
         通过baseMB参数在一个指定的baseapp上创建一个新的Entity实体。
@@ -405,7 +405,7 @@ def createEntityRemotelyFromDBID(entityType, dbID, baseMB, callback, dbInterface
     pass
 
 
-def createEntityLocally(entityType, *params):
+def createEntityLocally(entityType, params):
     """
     功能说明：
         创建一个新的Entity实体。
