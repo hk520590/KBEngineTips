@@ -1139,7 +1139,7 @@ class Entity:
         """
         pass
 
-    def createCellEntityInNewSpace(self, cellappIndex=0):
+    def createCellEntityInNewSpace(self, cellappIndex):
         """
         功能说明：
             在cellapp上创建一个空间(space)并且将该实体的cell创建到这个新的空间中，它请求通过cellappmgr来完成。
